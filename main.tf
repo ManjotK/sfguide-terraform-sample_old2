@@ -8,37 +8,13 @@ terraform {
 }
 
 provider "snowflake" {
-  alias = "sys_admin" 
-  role = "SYSADMIN"
+  alias = "security_admin" 
+  role = "SECURITYADMIN"
   account  = "gy63269"
   username = "tf-snow2"
   region   = "australia-east.azure"
   private_key_path = "./snowflake_tf_snow_key.p8"
 }
-
-resource "snowflake_database" "db" {
-  provider = snowflake.sys_admin
-  name     = "TF_DEMO2"
-}
-
-resource "snowflake_warehouse" "warehouse" {
-  provider       = snowflake.sys_admin
-  name           = "TF_DEMO2"
-  warehouse_size = "large"
-
-  auto_suspend = 60
-}
-provider "snowflake" {
-        alias = "security_admin"
-        role  = "SECURITYADMIN"
-    }
-
-
-resource "snowflake_role" "role" {
-        provider = snowflake.security_admin
-        name     = "TF_DEMO_SVC_ROLE"
-    }
-
 
 resource "snowflake_database_grant" "grant" {
         provider          = snowflake.security_admin
@@ -49,7 +25,7 @@ resource "snowflake_database_grant" "grant" {
     }
 
 
-resource "snowflake_schema" "schema" {
+    resource "snowflake_schema" "schema" {
         provider   = snowflake.sys_admin
         database   = snowflake_database.db.name
         name       = "TF_DEMO2"
@@ -57,7 +33,7 @@ resource "snowflake_schema" "schema" {
     }
 
 
-resource "snowflake_schema_grant" "grant" {
+    resource "snowflake_schema_grant" "grant" {
         provider          = snowflake.security_admin
         database_name     = snowflake_database.db.name
         schema_name       = snowflake_schema.schema.name
@@ -67,7 +43,7 @@ resource "snowflake_schema_grant" "grant" {
     }
 
 
-resource "snowflake_warehouse_grant" "grant" {
+    resource "snowflake_warehouse_grant" "grant" {
         provider          = snowflake.security_admin
         warehouse_name    = snowflake_warehouse.warehouse.name
         privilege         = "USAGE"
@@ -76,13 +52,13 @@ resource "snowflake_warehouse_grant" "grant" {
     }
 
 
-resource "tls_private_key" "svc_key" {
+    resource "tls_private_key" "svc_key" {
         algorithm = "RSA"
         rsa_bits  = 2048
     }
 
 
-resource "snowflake_user" "user" {
+    resource "snowflake_user" "user" {
         provider          = snowflake.security_admin
         name              = "tf_demo_user"
         default_warehouse = snowflake_warehouse.warehouse.name
@@ -92,7 +68,7 @@ resource "snowflake_user" "user" {
     }
 
 
-resource "snowflake_role_grants" "grants" {
+    resource "snowflake_role_grants" "grants" {
         provider  = snowflake.security_admin
         role_name = snowflake_role.role.name
         users     = [snowflake_user.user.name]
