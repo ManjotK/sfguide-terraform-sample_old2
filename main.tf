@@ -8,8 +8,10 @@ terraform {
 }
 
 provider "snowflake" {
-  alias = "sys_admin"
-  role  = "SYSADMIN"
+  account  = "gy63269"
+  username = "tf-snow2"
+  region   = "AZURE_AUSTRALIAEAST"
+  private_key_path = "./snowflake_tf_snow_key.p8"
 }
 
 resource "snowflake_database" "db" {
