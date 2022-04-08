@@ -12,18 +12,18 @@ provider "snowflake" {
   role = "SYSADMIN"
   account  = "gy63269"
   username = "tf-snow2"
-  region   = "AZURE_AUSTRALIAEAST"
+  region   = "australia-east.azure"
   private_key_path = "./snowflake_tf_snow_key.p8"
 }
 
 resource "snowflake_database" "db" {
   provider = snowflake.sys_admin
-  name     = "TF_DEMO"
+  name     = "TF_DEMO2"
 }
 
 resource "snowflake_warehouse" "warehouse" {
   provider       = snowflake.sys_admin
-  name           = "TF_DEMO"
+  name           = "TF_DEMO2"
   warehouse_size = "large"
 
   auto_suspend = 60
